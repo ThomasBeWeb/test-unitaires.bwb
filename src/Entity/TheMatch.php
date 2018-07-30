@@ -7,9 +7,9 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass="App\Repository\MatchRepository")
+ * @ORM\Entity(repositoryClass="App\Repository\TheMatchRepository")
  */
-class Match
+class TheMatch
 {
     /**
      * @ORM\Id()
@@ -19,23 +19,18 @@ class Match
     private $id;
 
     /**
-     * @ORM\Column(type="datetime")
-     */
-    private $date_match;
-
-    /**
-     * @ORM\Column(type="integer")
-     */
-    private $reste_places;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Stade", inversedBy="listeMatchs")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Stade")
      * @ORM\JoinColumn(nullable=false)
      */
     private $lieu;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Billet", mappedBy="match_id")
+     * @ORM\Column(type="datetime")
+     */
+    private $date_TheMatch;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Billet", mappedBy="rencontre")
      */
     private $listeBillets;
 
@@ -49,30 +44,6 @@ class Match
         return $this->id;
     }
 
-    public function getDateMatch(): ?\DateTimeInterface
-    {
-        return $this->date_match;
-    }
-
-    public function setDateMatch(\DateTimeInterface $date_match): self
-    {
-        $this->date_match = $date_match;
-
-        return $this;
-    }
-
-    public function getRestePlaces(): ?int
-    {
-        return $this->reste_places;
-    }
-
-    public function setRestePlaces(int $reste_places): self
-    {
-        $this->reste_places = $reste_places;
-
-        return $this;
-    }
-
     public function getLieu(): ?Stade
     {
         return $this->lieu;
@@ -81,6 +52,18 @@ class Match
     public function setLieu(?Stade $lieu): self
     {
         $this->lieu = $lieu;
+
+        return $this;
+    }
+
+    public function getDateTheMatch(): ?\DateTimeInterface
+    {
+        return $this->date_TheMatch;
+    }
+
+    public function setDateTheMatch(\DateTimeInterface $date_TheMatch): self
+    {
+        $this->date_TheMatch = $date_TheMatch;
 
         return $this;
     }
@@ -97,7 +80,7 @@ class Match
     {
         if (!$this->listeBillets->contains($listeBillet)) {
             $this->listeBillets[] = $listeBillet;
-            $listeBillet->setMatchId($this);
+            $listeBillet->setRencontre($this);
         }
 
         return $this;
@@ -108,8 +91,8 @@ class Match
         if ($this->listeBillets->contains($listeBillet)) {
             $this->listeBillets->removeElement($listeBillet);
             // set the owning side to null (unless already changed)
-            if ($listeBillet->getMatchId() === $this) {
-                $listeBillet->setMatchId(null);
+            if ($listeBillet->getRencontre() === $this) {
+                $listeBillet->setRencontre(null);
             }
         }
 

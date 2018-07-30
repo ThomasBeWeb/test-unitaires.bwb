@@ -39,7 +39,7 @@ class Stade
     private $reduc_abonnement;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="float")
      */
     private $prix_enfant;
 
@@ -49,7 +49,7 @@ class Stade
     private $reduc_etudiant;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Match", mappedBy="lieu")
+     * @ORM\OneToMany(targetEntity="App\Entity\TheMatch", mappedBy="lieu")
      */
     private $listeMatchs;
 
@@ -131,37 +131,6 @@ class Stade
     public function setReducEtudiant(int $reduc_etudiant): self
     {
         $this->reduc_etudiant = $reduc_etudiant;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection|Match[]
-     */
-    public function getListeMatchs(): Collection
-    {
-        return $this->listeMatchs;
-    }
-
-    public function addListeMatch(Match $listeMatch): self
-    {
-        if (!$this->listeMatchs->contains($listeMatch)) {
-            $this->listeMatchs[] = $listeMatch;
-            $listeMatch->setLieu($this);
-        }
-
-        return $this;
-    }
-
-    public function removeListeMatch(Match $listeMatch): self
-    {
-        if ($this->listeMatchs->contains($listeMatch)) {
-            $this->listeMatchs->removeElement($listeMatch);
-            // set the owning side to null (unless already changed)
-            if ($listeMatch->getLieu() === $this) {
-                $listeMatch->setLieu(null);
-            }
-        }
 
         return $this;
     }

@@ -17,19 +17,13 @@ class Billet
     private $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Match", inversedBy="listeBillets")
-     * @ORM\JoinColumn(nullable=false)
-     */
-    private $match_id;
-
-    /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Zone")
      * @ORM\JoinColumn(nullable=false)
      */
     private $zone;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Spectateur", inversedBy="listeBillets")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Spectateur")
      * @ORM\JoinColumn(nullable=false)
      */
     private $spectateur;
@@ -39,22 +33,17 @@ class Billet
      */
     private $prix_final;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\TheMatch", inversedBy="listeBillets", cascade={"persist"})
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $rencontre;
+
     public function getId()
     {
         return $this->id;
     }
 
-    public function getMatchId(): ?Match
-    {
-        return $this->match_id;
-    }
-
-    public function setMatchId(?Match $match_id): self
-    {
-        $this->match_id = $match_id;
-
-        return $this;
-    }
 
     public function getZone(): ?Zone
     {
@@ -88,6 +77,18 @@ class Billet
     public function setPrixFinal(float $prix_final): self
     {
         $this->prix_final = $prix_final;
+
+        return $this;
+    }
+
+    public function getRencontre(): ?TheMatch
+    {
+        return $this->rencontre;
+    }
+
+    public function setRencontre(?TheMatch $rencontre): self
+    {
+        $this->rencontre = $rencontre;
 
         return $this;
     }
