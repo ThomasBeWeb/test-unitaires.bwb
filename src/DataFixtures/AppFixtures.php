@@ -11,6 +11,7 @@ use App\Entity\Role;
 use App\Entity\Spectateur;
 use App\Entity\Stade;
 use App\Entity\Zone;
+use App\Entity\Traitements\Calculs;
 
 class AppFixtures extends Fixture
 {
@@ -46,12 +47,12 @@ class AppFixtures extends Fixture
     public function makeStade(ObjectManager $manager){
 
         $newObj = (new Stade())
-            ->setNbPlaces(30)
+            ->setNbPlaces(500)
             ->setPrixPlace(50)
             ->setPrixAbonnement(250)
             ->setReducAbonnement(20)
             ->setPrixEnfant(10)
-            ->setReducEtudiant(20)
+            ->setReducEtudiant(75)
         ;
 
         $manager->persist($newObj);
@@ -154,35 +155,15 @@ class AppFixtures extends Fixture
                 }
             }
 
-            $prix = $prix_place + ($prix_place * $randomZone->getMalus() / 100);
-
-            switch($randomSpectateur->getRole()->getNom()){
-
-                case "abonné":
-                    $prix = $prix * (1 - $stade->getReducAbonnement() / 100);
-                    break;
-
-                case "étudiant":
-                    $prix = $prix * (1 - $stade->getReducEtudiant() / 100);
-                    break;
-
-                case "enfant":
-                    $prix = $stade->getPrixEnfant();
-                    break;
-
-                default:
-                    break;
-            }
-
             $newObj = (new Billet())
                 ->setZone($randomZone)
                 ->setSpectateur($randomSpectateur)
-                //->setRencontre($newMatch)
-                ->setPrixFinal($prix)
             ;
 
             $newMatch->addListeBillet($newObj);
             
+            $newObj->setPrixFinal((new Calculs)->getPrixBillet($newObj));
+
             $manager->persist($newObj);
             $manager->flush();
         }
